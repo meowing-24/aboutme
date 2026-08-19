@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Big M</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="The Big M">
+    <meta property="og:description" content="Welcome to my website.">
+    <meta property="og:image" content="https://YOURDOMAIN.com/preview.png">
+    <meta property="og:url" content="https://YOURDOMAIN.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter / Discord -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Big M">
+    <meta name="twitter:description" content="Welcome to my website.">
+    <meta name="twitter:image" content="https://YOURDOMAIN.com/preview.png">
+
+    <style>
+        body {
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Big M</h1>
+    <p>Welcome to my website.</p>
+
+    <button onclick="shareLocation()">
+        Share My Location
+    </button>
+
+    <script>
+        // Send basic visit analytics
+        fetch("/api/visit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                event: "visit"
+            })
+        });
+
+        function shareLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation not supported.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+
+                    fetch("/api/visit", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            event: "location",
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        })
+                    });
+
+                    alert("Location shared.");
+                },
+                function() {
+                    alert("Location not shared.");
+                }
+            );
+        }
+    </script>
+
+</body>
+</html>
